@@ -16,6 +16,25 @@ help:
 
 up:
 	docker compose up --build -d
+	@echo ""
+	@echo "✅ RAG Assistant is running!"
+	@echo ""
+	@echo "  🌐 Frontend:      http://localhost:8000"
+	@echo "  📖 API docs:      http://localhost:8000/docs"
+	@echo ""
+	@echo "  Quick examples:"
+	@echo ""
+	@echo "  Upload a PDF:"
+	@echo "    curl -X POST http://localhost:8000/documents \\"
+	@echo "         -F 'file=@your-document.pdf'"
+	@echo ""
+	@echo "  Ask a question:"
+	@echo "    curl -X POST http://localhost:8000/chat \\"
+	@echo "         -H 'Content-Type: application/json' \\"
+	@echo "         -d '{\"query\": \"What is this document about?\"}'"
+	@echo ""
+	@echo "  Note: Ollama may take a few minutes to download models on first run."
+	@echo "        Run 'make logs-api' to follow startup progress."
 
 down:
 	docker compose down
