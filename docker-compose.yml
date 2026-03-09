@@ -52,3 +52,5 @@ services:
 volumes:
   chroma_data:
   ollama_data:
+    external: true
+    name: rag_ollama_data
