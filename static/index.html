@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG Assistant</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.indigo.min.css">
+  <link rel="stylesheet" href="/static/assets/style.css">
+</head>
+<body>
+
+<header class="container">
+  <nav>
+    <ul>
+      <li><strong>🔍 RAG Assistant</strong></li>
+    </ul>
+    <ul>
+      <li><a href="#" id="nav-chat" class="active" onclick="showView('chat', this)">💬 Chat</a></li>
+      <li><a href="#" id="nav-docs" onclick="showView('docs', this)">📂 Documentos</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+
+  <!-- ── CHAT VIEW ─────────────────────────────────────────────────────── -->
+  <section id="view-chat" class="view active">
+    <div id="chat-messages">
+      <div class="bubble bot">Hola 👋 Sube un PDF en <strong>Documentos</strong> y hazme una pregunta.</div>
+    </div>
+    <form id="chat-form">
+      <div role="group">
+        <input id="chat-input" type="text" placeholder="Escribe tu pregunta…" autocomplete="off" required>
+        <button type="submit" id="chat-btn">Enviar</button>
+      </div>
+    </form>
+
+    <!-- Metrics panel -->
+    <details id="metrics-panel" style="margin-top:.5rem">
+      <summary style="font-size:.8rem;color:var(--pico-muted-color);cursor:pointer;user-select:none">
+        📊 Métricas de las últimas consultas
+      </summary>
+      <div style="margin-top:.75rem;overflow-x:auto">
+        <div id="metrics-summary" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.75rem">
+          <span id="m-consultas" class="metric-chip">— consultas</span>
+          <span id="m-tiempo"    class="metric-chip">⏱ —s promedio</span>
+          <span id="m-chunks"    class="metric-chip">📦 — chunks promedio</span>
+          <span id="m-rechazo"   class="metric-chip">🚫 —% rechazo</span>
+        </div>
+        <table id="metrics-table" style="font-size:.78rem;width:100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tiempo (s)</th>
+              <th>Chunks encontrados</th>
+              <th>Chunks usados</th>
+              <th>Dist. promedio</th>
+              <th>Modelo</th>
+              <th>Rechazada</th>
+            </tr>
+          </thead>
+          <tbody id="metrics-tbody">
+            <tr><td colspan="7" style="color:var(--pico-muted-color)">Sin datos aún.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <!-- ── DOCUMENTS VIEW ────────────────────────────────────────────────── -->
+  <section id="view-docs" class="view">
+
+    <!-- Upload -->
+    <article>
+      <header><strong>Subir documento</strong></header>
+      <div id="drop-zone">
+        <input type="file" id="file-input" accept="application/pdf" multiple>
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Arrastra PDFs aquí o <u>haz clic para seleccionar</u>
+      </div>
+      <div id="upload-progress" style="display:none">
+        <progress id="upload-bar"></progress>
+        <small id="upload-label"></small>
+      </div>
+    </article>
+
+    <!-- Document list -->
+    <article>
+      <header>
+        <strong>Documentos ingresados</strong>
+        <button class="outline secondary" style="float:right;padding:.25rem .75rem;font-size:.8rem"
+                onclick="loadDocs()">↺ Actualizar</button>
+      </header>
+      <div id="docs-table-wrap">
+        <p class="secondary" id="docs-empty">Cargando…</p>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+<script src="/static/assets/app.js"></script>
+</body>
+</html>

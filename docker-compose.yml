@@ -1,0 +1,54 @@
+name: rag-assistant   # v1.0.0
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - chromadb
+      - ollama
+    environment:
+      # ChromaDB
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - CHROMA_DISTANCE=cosine
+      # Ollama
+      - OLLAMA_HOST=http://ollama:11434
+      - EMBED_MODEL=nomic-embed-text
+      - CHAT_MODEL=llama3.2:1b
+      # RAG retrieval
+      - SIMILARITY_THRESHOLD=0.5
+      - RETRIEVAL_TOP_K=5
+      - CHUNK_SIZE=500
+      - CHUNK_OVERLAP=50
+      # RAG quality
+      - QUERY_EXPANSION=false
+      # LLM generation
+      - LLM_TEMPERATURE=0.2
+      - LLM_NUM_CTX=2048
+      - LLM_TOP_P=0.9
+      - LLM_REPEAT_PENALTY=1.1
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./ollama-entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+    environment:
+      - EMBED_MODEL=nomic-embed-text
+      - CHAT_MODEL=llama3.2:1b
+
+volumes:
+  chroma_data:
+  ollama_data:
